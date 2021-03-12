@@ -1,0 +1,2 @@
+class VerifyAccountKey < ApplicationRecord
+end

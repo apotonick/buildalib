@@ -11,4 +11,12 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+
+end
+
+class Minitest::Spec
+  before do # TODO: cannot Rails clean the database for us?
+    User.delete_all
+    VerifyAccountKey.delete_all
+  end
 end
