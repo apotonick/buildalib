@@ -69,6 +69,57 @@ class AuthOperationTest < Minitest::Spec
       assert result.failure? # verify account token is not unique.
       assert_equal "Please try again.", result[:error]
     end
-  end # describe/Create
+  end # describe/CreateAccount
+
+  describe "VerifyAccount" do
+    let(:valid_create_options) {
+      {
+        email:            "yogi@trb.to",
+        password:         "1234",
+        password_confirm: "1234",
+      }
+    }
+
+    it "allows finding an account from {verify_account_token}" do
+        result = Auth::Operation::CreateAccount.wtf?(valid_create_options)
+        assert result.success?
+
+        verify_account_token = result[:verify_account_token] # 158_NvMiR6UVglr4pXT_8dqIJB41c0o3lKul2RQc84Tn2kc
+
+        result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: verify_account_token)
+        assert result.success?
+
+        user = result[:user]
+        assert_equal "ready to login", user.state
+        assert_equal "yogi@trb.to", user.email
+        assert_nil VerifyAccountKey.where(user_id: user.id)[0]
+      end
+
+      it "fails with invalid ID prefix" do
+        result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: "0_safasdfafsaf")
+        assert result.failure?
+      end
+
+      it "fails with invalid token" do
+        result = Auth::Operation::CreateAccount.wtf?(valid_create_options)
+        assert result.success?
+
+        result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: result[:verify_account_token] + "rubbish")
+        assert result.failure?
+
+        result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: "")
+        assert result.failure?
+      end
+
+      it "fails second time" do
+        result = Auth::Operation::CreateAccount.wtf?(valid_create_options)
+        assert result.success?
+
+        result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: result[:verify_account_token])
+        assert result.success?
+        result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: result[:verify_account_token])
+        assert result.failure?
+      end
+  end # describe/VerifyAccount
 
 end
