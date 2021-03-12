@@ -58,6 +58,7 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    bcrypt (3.1.16)
     bindex (0.8.1)
     bootsnap (1.7.2)
       msgpack (~> 1.0)
@@ -74,14 +75,16 @@ GEM
     childprocess (3.0.0)
     concurrent-ruby (1.1.8)
     crass (1.0.6)
+    declarative (0.0.20)
+    declarative-option (0.1.0)
     erubi (1.10.0)
     ffi (1.15.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    hashie (4.1.0)
+    hirb (0.7.3)
     i18n (1.8.9)
       concurrent-ruby (~> 1.0)
-    jbuilder (2.11.2)
-      activesupport (>= 5.0.0)
     listen (3.4.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -96,6 +99,8 @@ GEM
     mimemagic (0.3.5)
     mini_mime (1.0.2)
     minitest (5.14.4)
+    minitest-line (0.6.5)
+      minitest (~> 5.0)
     msgpack (1.4.2)
     nio4r (2.5.7)
     nokogiri (1.11.2-x86_64-linux)
@@ -140,6 +145,10 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.1.1)
+    representable (3.0.4)
+      declarative (< 0.1.0)
+      declarative-option (< 0.2.0)
+      uber (< 0.2.0)
     rubyzip (2.3.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -169,11 +178,23 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    turbolinks (5.2.1)
-      turbolinks-source (~> 5.2)
-    turbolinks-source (5.2.0)
+    trailblazer-activity (0.12.0)
+      trailblazer-context (>= 0.4.0, < 0.5.0)
+    trailblazer-activity-dsl-linear (0.4.0)
+      trailblazer-activity (>= 0.12.0, < 1.0.0)
+    trailblazer-context (0.4.0)
+      hashie (>= 3.0.0)
+    trailblazer-developer (0.0.21)
+      hirb
+      representable
+      trailblazer-activity (>= 0.11.0, < 1.0.0)
+      trailblazer-activity-dsl-linear
+    trailblazer-operation (0.7.3)
+      trailblazer-activity-dsl-linear (>= 0.4.0, < 1.0.0)
+      trailblazer-developer (>= 0.0.21, < 1.0.0)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
+    uber (0.1.0)
     web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -198,11 +219,13 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bcrypt
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
-  jbuilder (~> 2.7)
   listen (~> 3.2)
+  minitest
+  minitest-line
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.5)
   sass-rails (>= 6)
@@ -210,14 +233,11 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3 (~> 1.4)
-  turbolinks (~> 5)
+  trailblazer-operation (>= 0.7.3)
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers
   webpacker (~> 4.0)
-
-RUBY VERSION
-   ruby 2.6.5p114
 
 BUNDLED WITH
    2.2.9
