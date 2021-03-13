@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_05_191238) do
+ActiveRecord::Schema.define(version: 2021_03_10_160223) do
+
+  create_table "reset_password_keys", force: :cascade do |t|
+    t.integer "user_id"
+    t.text "key"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["key"], name: "index_reset_password_keys_on_key", unique: true
+  end
 
   create_table "users", force: :cascade do |t|
     t.text "email"

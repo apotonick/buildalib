@@ -71,14 +71,15 @@ class AuthOperationTest < Minitest::Spec
     end
   end # describe/CreateAccount
 
-  describe "VerifyAccount" do
-    let(:valid_create_options) {
-      {
-        email:            "yogi@trb.to",
-        password:         "1234",
-        password_confirm: "1234",
-      }
+  let(:valid_create_options) {
+    {
+      email:            "yogi@trb.to",
+      password:         "1234",
+      password_confirm: "1234",
     }
+  }
+
+  describe "VerifyAccount" do
 
     it "allows finding an account from {verify_account_token}" do
         result = Auth::Operation::CreateAccount.wtf?(valid_create_options)
@@ -122,4 +123,48 @@ class AuthOperationTest < Minitest::Spec
       end
   end # describe/VerifyAccount
 
+  describe "#ResetPassword" do
+    it "fails with unknown email" do
+      result = Auth::Operation::ResetPassword.wtf?(
+        {
+          email:            "i_do_not_exist@trb.to",
+        }
+      )
+
+      assert result.failure?
+    end
+
+    it "resets password and sends a reset-password email" do
+      # test setup aka "factories":
+      result = nil
+      assert_emails 2 do
+        result = Auth::Operation::CreateAccount.wtf?(valid_create_options)
+        result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: result[:verify_account_token])
+
+        # the actual test.
+        result = Auth::Operation::ResetPassword.wtf?(
+          {
+            email:            "yogi@trb.to",
+          }
+        )
+      end
+
+      assert result.success?
+
+      user = result[:user]
+      assert_equal "yogi@trb.to", user.email
+      assert_nil user.password                                  # password reset!
+      assert_equal "password reset, please change password", user.state
+
+      assert_match /#{user.id}_.+/, result[:verify_account_token]
+
+      reset_password_token = ResetPasswordKey.where(user_id: user.id)[0]
+      # token is something like "aJK1mzcc6adgGvcJq8rM_bkfHk9FTtjypD8x7RZOkDo"
+      assert_equal 43, reset_password_token.key.size
+
+      assert_match /\/auth\/reset_password\/#{user.id}_#{reset_password_token.key}/, result[:email].body.to_s
+      #:reset end
+    end
+
+  end # describe/ResetPassword
 end
