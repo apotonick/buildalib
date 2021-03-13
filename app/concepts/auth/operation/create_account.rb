@@ -7,8 +7,9 @@ module Auth::Operation
     step :password_hash
     step :state
     step :save_account
-    step :generate_verify_account_key
-    step :save_verify_account_key
+    step Subprocess(Auth::Activity::CreateKey),
+      input:  ->(ctx, user:, **) { {key_model_class: VerifyAccountKey, user: user}.merge(ctx.key?(:secure_random) ? {secure_random: ctx[:secure_random]} : {}) },
+      output: ->(ctx, key:, **) { {verify_account_key: key, error: ctx[:error]} }
     step :send_verify_account_email
 
     #~meth
@@ -44,19 +45,6 @@ module Auth::Operation
 
       ctx[:user] = user
     end
-    def generate_verify_account_key(ctx, secure_random: SecureRandom, **)
-      ctx[:verify_account_key] = secure_random.urlsafe_base64(32)
-    end
-
-    def save_verify_account_key(ctx, verify_account_key:, user:, **)
-      begin
-        VerifyAccountKey.create(user_id: user.id, key: verify_account_key)
-      rescue ActiveRecord::RecordNotUnique
-        ctx[:error] = "Please try again."
-        return false
-      end
-    end
-    #~meth end
 
     def send_verify_account_email(ctx, verify_account_key:, user:, **)
       token = "#{user.id}_#{verify_account_key}" # stolen from Rodauth.
