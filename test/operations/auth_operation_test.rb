@@ -238,4 +238,26 @@ class AuthOperationTest < Minitest::Spec
       assert_nil result[:user].password
     end
   end # describe/UpdatePassword
+
+  describe "Login" do
+    it "is successful with existing, active account" do
+      result = Auth::Operation::CreateAccount.(valid_create_options)
+      result = Auth::Operation::VerifyAccount.(verify_account_token: result[:verify_account_token])
+      result = Auth::Operation::ResetPassword.(email: "yogi@trb.to")
+      token  = result[:reset_password_token]
+      result = Auth::Operation::UpdatePassword.(token: token, password: "12345678", password_confirm: "12345678")
+
+      result = Auth::Operation::Login.wtf?(email: "yogi@trb.to", password: "12345678")
+      assert result.success?
+
+    # fails with wrong password
+      result = Auth::Operation::Login.wtf?(email: "yogi@trb.to", password: "abcd")
+      assert result.failure?
+    end
+
+    it "fails with unknown email" do
+      result = Auth::Operation::Login.wtf?(email: "yogi@trb.to", password: "abcd")
+      assert result.failure?
+    end
+  end # describe/Login
 end
