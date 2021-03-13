@@ -165,4 +165,77 @@ class AuthOperationTest < Minitest::Spec
       end
     end
   end # describe/ResetPassword
+
+  describe "UpdatePassword::CheckToken" do
+    it "finds user by reset-password token and compares keys" do
+      # test setup aka "factories", we don't have to use `wtf?` every time.
+      result = Auth::Operation::CreateAccount.(valid_create_options)
+      result = Auth::Operation::VerifyAccount.(verify_account_token: result[:verify_account_token])
+      result = Auth::Operation::ResetPassword.(email: "yogi@trb.to")
+      token  = result[:reset_password_token]
+
+      result = Auth::Operation::UpdatePassword::CheckToken.wtf?(token: token)
+      assert result.success?
+
+      original_key = result[:key] # note how you can read variables written in CheckToken if you don't use {:output}.
+
+      user = result[:user]
+      assert user.persisted?
+      assert_equal "yogi@trb.to", user.email
+      assert_nil user.password                                  # password reset!
+      assert_equal "password reset, please change password", user.state
+
+      # key is still in database:
+      reset_password_key = ResetPasswordKey.where(user_id: user.id)[0]
+      # key hasn't changed:
+      assert_equal original_key, reset_password_key
+    end
+
+    it "fails with wrong token" do
+      result = Auth::Operation::CreateAccount.(valid_create_options)
+      result = Auth::Operation::VerifyAccount.(verify_account_token: result[:verify_account_token])
+      result = Auth::Operation::ResetPassword.(email: "yogi@trb.to")
+      token  = result[:reset_password_token]
+
+      result = Auth::Operation::UpdatePassword::CheckToken.wtf?(token: token + "rubbish")
+      assert result.failure?
+    end
+  end # describe/UpdatePassword::CheckToken
+
+  describe "UpdatePassword" do
+    it "finds user by reset_password_token and updates password" do
+      result = Auth::Operation::CreateAccount.(valid_create_options)
+      result = Auth::Operation::VerifyAccount.(verify_account_token: result[:verify_account_token])
+      result = Auth::Operation::ResetPassword.(email: "yogi@trb.to")
+      token  = result[:reset_password_token]
+
+      result = Auth::Operation::UpdatePassword.wtf?(token: token, password: "12345678", password_confirm: "12345678")
+      assert result.success?
+
+      user = result[:user]
+      assert user.persisted?
+      assert_equal "yogi@trb.to", user.email
+      assert_equal 60, user.password.size
+      assert_equal "ready to login", user.state
+
+      # key is expired:
+      assert_nil ResetPasswordKey.where(user_id: user.id)[0]
+    end
+
+    it "fails with wrong password combo" do
+      result = Auth::Operation::CreateAccount.(valid_create_options)
+      result = Auth::Operation::VerifyAccount.(verify_account_token: result[:verify_account_token])
+      result = Auth::Operation::ResetPassword.(email: "yogi@trb.to")
+      token  = result[:reset_password_token]
+
+      result = Auth::Operation::UpdatePassword.wtf?(
+        token:            token,
+        password:         "12345678",
+        password_confirm: "123"
+      )
+      assert result.failure?
+      assert_equal "Passwords do not match.", result[:error]
+      assert_nil result[:user].password
+    end
+  end # describe/UpdatePassword
 end
