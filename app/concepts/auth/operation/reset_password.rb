@@ -4,8 +4,8 @@ module Auth::Operation
     pass :reset_password
     step :state
     step :save_user
-    step :generate_verify_account_token
-    step :save_verify_account_token
+    step Subprocess(Auth::Activity::CreateKey),
+      input:  ->(ctx, user:, **) { {key_model_class: ResetPasswordKey, user: user} }
     step :send_reset_password_email
 
     def find_user(ctx, email:, **)
@@ -24,23 +24,8 @@ module Auth::Operation
       user.save
     end
 
-    # FIXME: copied from CreateAccount!!!
-    def generate_verify_account_token(ctx, secure_random: SecureRandom, **)
-      ctx[:reset_password_key] = secure_random.urlsafe_base64(32)
-    end
-
-    # FIXME: almost copied from CreateAccount!!!
-    def save_verify_account_token(ctx, reset_password_key:, user:, **)
-      begin
-        ResetPasswordKey.create(user_id: user.id, key: reset_password_key) # VerifyAccountKey => ResetPasswordKey
-      rescue ActiveRecord::RecordNotUnique
-        ctx[:error] = "Please try again."
-        return false
-      end
-    end
-
-    def send_reset_password_email(ctx, reset_password_key:, user:, **)
-      token = "#{user.id}_#{reset_password_key}" # stolen from Rodauth.
+    def send_reset_password_email(ctx, key:, user:, **)
+      token = "#{user.id}_#{key}" # stolen from Rodauth.
 
       ctx[:reset_password_token] = token
 
