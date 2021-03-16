@@ -5,7 +5,8 @@ module Auth::Operation
     step :state
     step :save_user
     step Subprocess(Auth::Activity::CreateKey),
-      input:  ->(ctx, user:, **) { {key_model_class: ResetPasswordKey, user: user} }
+      # input:  ->(ctx, user:, **) { {key_model_class: ResetPasswordKey, user: user} }
+      input:  ->(ctx, user:, **) { {key_model_class: ResetPasswordKey, user: user}.merge(ctx.key?(:secure_random) ? {secure_random: ctx[:secure_random]} : {}) }
     step :send_reset_password_email
 
     def find_user(ctx, email:, **)
