@@ -163,6 +163,20 @@ class AuthOperationTest < Minitest::Spec
 
         assert_match /\/auth\/reset_password\/#{user.id}_#{reset_password_key.key}/, result[:email].body.to_s
       end
+
+    end
+
+    it "fails when trying to insert the same {reset_password_token} twice" do
+      result = Auth::Operation::CreateAccount.wtf?(valid_create_options)
+      result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: result[:verify_account_token])
+      result = Auth::Operation::ResetPassword.wtf?(email: "yogi@trb.to", secure_random: NotRandom)
+      assert_equal "this is not random", result[:key]
+
+      result = Auth::Operation::CreateAccount.wtf?(valid_create_options.merge(email: "fred@trb.to"))
+      result = Auth::Operation::VerifyAccount.wtf?(verify_account_token: result[:verify_account_token])
+      result = Auth::Operation::ResetPassword.wtf?(email: "fred@trb.to", secure_random: NotRandom)
+      assert result.failure? # verify account token is not unique.
+      assert_equal "Please try again.", result[:error]
     end
   end # describe/ResetPassword
 end
