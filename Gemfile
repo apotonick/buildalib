@@ -24,6 +24,11 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem "trailblazer-operation", ">= 0.7.3"
 gem "bcrypt"
 
+gem 'cells'
+gem 'cells-erb'
+gem 'cells-rails'
+gem 'trailblazer-cells'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
