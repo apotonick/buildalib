@@ -14,8 +14,8 @@ module Auth::Activity
       ctx[:error] = "Passwords do not match."
     end
 
-    def password_hash(ctx, password:, password_hash_cost: BCrypt::Engine::MIN_COST, **) # stolen from Rodauth.
-      ctx[:password_hash] = BCrypt::Password.create(password, cost: password_hash_cost)
+    def password_hash(ctx, password:, bcrypt_cost: BCrypt::Engine::MIN_COST, **) # stolen from Rodauth.
+      ctx[:password_hash] = BCrypt::Password.create(password, cost: bcrypt_cost)
     end
   end
 end
