@@ -6,9 +6,9 @@ module Auth::Operation
       end
     end
 
-    step Subprocess(CheckToken)                       # provides {:user}
+    step Subprocess(CheckToken)                        # provides {:user}
     step Subprocess(Auth::Activity::ProcessPasswords), # provides {:password_hash}
-      fail_fast: true
+      fail_fast: true # only wires {fail_fast}.
     step :state
     step :update_user
     step :expire_reset_password_key
