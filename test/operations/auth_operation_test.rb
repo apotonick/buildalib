@@ -257,11 +257,11 @@ class AuthOperationTest < Minitest::Spec
     it "is successful with existing, active account" do
       result = Auth::Operation::CreateAccount.(valid_create_options)
       result = Auth::Operation::VerifyAccount.(verify_account_token: result[:verify_account_token])
-      result = Auth::Operation::ResetPassword.(email: "yogi@trb.to")
-      token  = result[:reset_password_token]
-      result = Auth::Operation::UpdatePassword.(token: token, password: "12345678", password_confirm: "12345678")
+      # result = Auth::Operation::ResetPassword.(email: "yogi@trb.to")
+      # token  = result[:reset_password_token]
+      # result = Auth::Operation::UpdatePassword.(token: token, password: "12345678", password_confirm: "12345678")
 
-      result = Auth::Operation::Login.wtf?(email: "yogi@trb.to", password: "12345678")
+      result = Auth::Operation::Login.wtf?(email: "yogi@trb.to", password: "1234")
       assert result.success?
 
     # fails with wrong password
