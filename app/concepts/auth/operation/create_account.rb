@@ -2,7 +2,8 @@ module Auth::Operation
   class CreateAccount < Trailblazer::Operation
     step :check_email
     fail :email_invalid_msg, fail_fast: true
-    step Subprocess(Auth::Activity::ProcessPasswords) # provides {:password_hash}
+    step Subprocess(Auth::Activity::ProcessPasswords), # provides {:password_hash}
+      fast_track: true # wires {fail_fast} and {pass_fast}.
     step :state
     step :save_account
     step Subprocess(Auth::Activity::CreateKey),
