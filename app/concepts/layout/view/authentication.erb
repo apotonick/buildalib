@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trailblazer Auth Example</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_pack_tag 'application' %>
+    <%= javascript_pack_tag 'application' %>
+  </head>
+
+  <body>
+    <div class="relative h-screen flex items-center justify-center bg-cream py-12 px-4 sm:px-6 lg:px-8">
+      <div
+        class="absolute inset-0 bg-cover"
+        style="background-image: url('<%= asset_pack_path('media/images/hero.png') %>');"
+      >
+        <div class="h-8 w-full my-5 flex items-center justify-center">
+          <img src="<%= asset_pack_path('media/images/logo.png') %>" class="h-full" alt="Trailblazer Logo"></img>
+        </div>
+      </div>
+      <div class="relative max-w-md w-full space-y-8">
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<%= form_for :sign_in, url: sign_in_path, html: { class: "my-8 p-5 space-y-6 bg-white rounded-md text-purple" } do |f| %>
+  <h2 class="mt-3 text-center text-3xl font-extrabold">
+    Sign in to your account
+  </h2>
+  <div class="rounded-md shadow-sm -space-y-px">
+    <div>
+      <%= f.text_field :email, type: :email, autocomplete: :email, required: true, class: 'appearance-none rounded-none   relative block w-full px-3 py-2 my-5 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm', placeholder: 'Email Address' %>
+    </div>
+    <div>
+      <%= f.text_field :password, type: :password, autocomplete: "current-password", required: true, class: "appearance-none rounded-none relative block w-full px-3 py-2 my-5 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Password" %>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between">
+    <div class="flex items-center">
+      <%= f.check_box :remember_me, class: "h-4 w-4 text-indigo-600 focus:text-purple border-gray-300 rounded" %>
+      <%= label_tag "sign_in_remember_me", "Remember me", class: "ml-2 block text-sm font-medium" %>
+    </div>
+
+    <div class="text-sm">
+      <%= link_to "Forgot your password?", new_password_path, class: "font-medium hover:text-indigo-500" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.submit "Sign in", class: "group relative w-full flex justify-center my-5 py-2 px-4 cursor-pointer border border-transparent text-sm font-medium rounded-md text-white bg-purple hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+
+  <div class="text-sm text-center">
+    <span class="text-sm">Don't have an account ?</span>
+    <%= link_to "Sign up", new_sign_up_path, class: "font-medium hover:text-indigo-500" %>
+  </div>
+<% end %>
