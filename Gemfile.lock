@@ -1,3 +1,11 @@
+PATH
+  remote: ../trailblazer-rails
+  specs:
+    trailblazer-rails (2.1.8)
+      railties (>= 5.2.0)
+      trailblazer (>= 2.1.0.rc11, < 2.2.0)
+      trailblazer-loader (>= 0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -90,6 +98,12 @@ GEM
     declarative-builder (0.1.0)
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
+    disposable (0.4.7)
+      declarative (>= 0.0.9, < 1.0.0)
+      declarative-builder (< 0.2.0)
+      declarative-option (< 0.2.0)
+      representable (>= 2.4.0, <= 3.1.0)
+      uber (< 0.2.0)
     erbse (0.1.4)
       temple
     erubi (1.10.0)
@@ -161,6 +175,10 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    reform (2.5.0)
+      disposable (>= 0.4.2, < 0.5.0)
+      representable (>= 2.4.0, < 3.1.0)
+      uber (< 0.2.0)
     regexp_parser (2.1.1)
     representable (3.0.4)
       declarative (< 0.1.0)
@@ -196,6 +214,10 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    trailblazer (2.1.0)
+      trailblazer-macro (>= 2.1.0, < 2.2.0)
+      trailblazer-macro-contract (>= 2.1.0, < 2.2.0)
+      trailblazer-operation
     trailblazer-activity (0.12.1)
       trailblazer-context (>= 0.4.0, < 0.5.0)
     trailblazer-activity-dsl-linear (0.4.0)
@@ -209,6 +231,13 @@ GEM
       representable
       trailblazer-activity (>= 0.11.0, < 1.0.0)
       trailblazer-activity-dsl-linear
+    trailblazer-loader (0.1.2)
+    trailblazer-macro (2.1.6)
+      trailblazer-activity-dsl-linear (>= 0.4.0, < 0.5.0)
+      trailblazer-operation (>= 0.7.0)
+    trailblazer-macro-contract (2.1.1)
+      reform (>= 2.2.0, < 3.0.0)
+      trailblazer-activity-dsl-linear (>= 0.4.0, < 0.5.0)
     trailblazer-operation (0.7.3)
       trailblazer-activity-dsl-linear (>= 0.4.0, < 1.0.0)
       trailblazer-developer (>= 0.0.21, < 1.0.0)
@@ -259,6 +288,7 @@ DEPENDENCIES
   sqlite3 (~> 1.4)
   trailblazer-cells
   trailblazer-operation (>= 0.7.3)
+  trailblazer-rails!
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers
