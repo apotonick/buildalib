@@ -9,6 +9,7 @@ class AuthsTest < ApplicationSystemTestCase
 # Nothing filled in
     click_on "Sign up"
     assert_selector "h2", text: "Create your account"
+    # assert_selector "#signup_email[value='']"
     # TODO: test callout bubble
     # TODO: test manual, empty POST
 
@@ -24,6 +25,12 @@ class AuthsTest < ApplicationSystemTestCase
     click_on "Sign up"
     assert_selector "h2", text: "Create your account"
     assert_selector ".error", text: "Password does not meet requirements."
+    assert_selector "#signup_email[value='yogi@trb.to']"
 
+# Valid input
+    fill_in "Email", with: "yogi@trb.to"
+    fill_in "Password", with: "1234"
+    fill_in "Confirm password", with: "1234"
+raise
   end
 end

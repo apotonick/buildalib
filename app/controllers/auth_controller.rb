@@ -8,7 +8,7 @@ class AuthController < ApplicationController
   #       passing all variables is cumbersome
   def signup
     ctx = run Auth::Operation::CreateAccount, **{email: params[:signup][:email], password: params[:signup][:password], password_confirm: params[:signup][:password_confirm]} do |ctx|
-      render cell(SignUp::Cell::Success, ctx, layout: Layout::Cell::Authentication)
+      render cell(Auth::SignUp::Cell::Success, ctx, layout: Layout::Cell::Authentication)
       # return raise("thanks!")
     end
 
