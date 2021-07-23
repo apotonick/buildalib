@@ -2,8 +2,11 @@ require "application_system_test_case"
 
 class AuthsTest < ApplicationSystemTestCase
   driven_by :selenium, using: :headless_chrome
+  include ActionMailer::TestHelper
 
   test "visiting the index" do
+    User.delete_all # FIXME
+
     visit signup_url
 
 # Nothing filled in
@@ -31,6 +34,12 @@ class AuthsTest < ApplicationSystemTestCase
     fill_in "Email", with: "yogi@trb.to"
     fill_in "Password", with: "1234"
     fill_in "Confirm password", with: "1234"
-raise
+
+    assert_emails 1 do
+        click_on "Sign up"
+
+        assert_selector "h2", text: "Welcome!"
+    end
+    # TODO: check mail content
   end
 end
