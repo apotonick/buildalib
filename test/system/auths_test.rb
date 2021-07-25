@@ -40,6 +40,9 @@ class AuthsTest < ApplicationSystemTestCase
 
         assert_selector "h2", text: "Welcome!"
     end
-    # TODO: check mail content
+    # check mail content
+    email = ActionMailer::Base.deliveries.last
+    assert_equal ["yogi@trb.to"], email.to
+    assert_match /auth\/verify_account\/\w+/, email.body.to_s
   end
 end

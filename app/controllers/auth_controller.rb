@@ -9,7 +9,7 @@ class AuthController < ApplicationController
   def signup
     ctx = run Auth::Operation::CreateAccount, **{email: params[:signup][:email], password: params[:signup][:password], password_confirm: params[:signup][:password_confirm]} do |ctx|
       render cell(Auth::SignUp::Cell::Success, ctx, layout: Layout::Cell::Authentication)
-      # return raise("thanks!")
+      return
     end
 
     render cell(Auth::SignUp::Cell::New, ctx, layout: Layout::Cell::Authentication)
