@@ -11,7 +11,11 @@ class AuthController < ApplicationController
     # domain_ctx_filter: ApplicationController.current_user_in_domain_ctx
 
   endpoint Trailblazer::Operation # FIXME
-  endpoint Auth::Operation::CreateAccount
+  endpoint Auth::Operation::CreateAccount do
+    {
+      Output(:fail_fast) => Track(:failure)
+    }
+  end
 
   def signup_form
     ctx = {}
@@ -26,9 +30,8 @@ class AuthController < ApplicationController
   # problem: {params[:signup]} could be nil
   #       passing all variables is cumbersome
   def signup
-    endpoint Auth::Operation::CreateAccount, **{email: params[:signup][:email], password: params[:signup][:password], password_confirm: params[:signup][:password_confirm]} do |ctx|
+    endpoint Auth::Operation::CreateAccount, options_for_domain_ctx: {email: params[:signup][:email], password: params[:signup][:password], password_confirm: params[:signup][:password_confirm]} do |ctx|
       render cell(Auth::SignUp::Cell::Success, ctx, layout: Layout::Cell::Authentication)
-      return
     end.Or do |ctx|
       render cell(Auth::SignUp::Cell::New, ctx, layout: Layout::Cell::Authentication)
     end
