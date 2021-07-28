@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   resources :passwords, only: [:new, :create, :edit, :update]
   resource :profile, only: [:edit, :update]
 
-  get  "/auth/signup" => "auth#signup_form"
-  post "/auth/signup" => "auth#signup", as: :signup
+  get  "/auth/signup" => "auth#signup_form",  as: :signup_form
+  post "/auth/signup" => "auth#signup",       as: :signup
 
   get "/auth/verify_account/:token" => "auth#verify_account", as: :verify_account
   get "/auth/reset_password/:token" => "auth#reset_password", as: :reset_password

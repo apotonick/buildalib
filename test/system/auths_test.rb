@@ -7,7 +7,11 @@ class AuthsTest < ApplicationSystemTestCase
   test "visiting the index" do
     User.delete_all # FIXME
 
-    visit signup_url
+    visit signup_form_url
+
+# assert layout
+    # puts page.body
+    assert_selector ".content"
 
 # Nothing filled in
     click_on "Sign up"
