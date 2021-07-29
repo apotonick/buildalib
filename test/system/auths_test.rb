@@ -17,6 +17,7 @@ class AuthsTest < ApplicationSystemTestCase
     # puts page.body
     assert_selector ".content"
 
+# [OP] sign up
 # Nothing filled in
     click_on "Sign up"
     assert_selector "h2", text: "Create your account"
@@ -43,20 +44,23 @@ class AuthsTest < ApplicationSystemTestCase
     fill_in "Password", with: "1234"
     fill_in "Confirm password", with: "1234"
 
-    # assert_emails 1 do
-        click_on "Sign up"
+    click_on "Sign up"
 
-        assert_selector "h2", text: "Welcome!"
-    # end
+    assert_selector "h2", text: "Welcome!"
+
     # check mail content
-
-    # correct token
     verify_account_email = open_email("yogi@trb.to")
     assert_must have_body_text(/auth\/verify_account\/\w+/), verify_account_email
     assert_must deliver_to("yogi@trb.to"), verify_account_email
+
+
+# [OP] Verify account
+    # wrong credentials
+    # TODO
+
+    # correct token
     click_first_link_in_email(verify_account_email)
 
-# Verify account
-    # wrong credentials
+
   end
 end
