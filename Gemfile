@@ -31,6 +31,7 @@ gem 'trailblazer-cells'
 gem "trailblazer-rails", path: "../trailblazer-rails"
 gem "reform-rails"
 gem "trailblazer-endpoint", path: "../trailblazer-endpoint"
+gem "rexml"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -54,6 +55,9 @@ group :test do
   gem 'webdrivers'
   gem "minitest"
   gem "minitest-line"
+
+  gem "minitest-matchers"
+  gem "email_spec"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
