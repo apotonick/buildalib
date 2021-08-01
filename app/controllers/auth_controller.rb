@@ -57,8 +57,7 @@ class AuthController < ApplicationController
     endpoint Auth::Operation::VerifyAccount, options_for_domain_ctx: {verify_account_token: params[:token]} do |ctx|
       render cell(Auth::SignUp::Cell::VerifySuccess, ctx[:user])
     end.Or do |ctx|
-      raise
-
+      render cell(Auth::SignUp::Cell::VerifyFailure, ctx) # TODO: offer link for fresh token?
     end
   end
 

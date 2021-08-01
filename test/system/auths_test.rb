@@ -56,7 +56,11 @@ class AuthsTest < ApplicationSystemTestCase
 
 # [OP] Verify account
     # wrong credentials
-    # TODO
+    url_with_token = links_in_email(verify_account_email)[0]
+    path_with_token = url_with_token.sub("http://example.com", "")
+    visit path_with_token+"rubbish"
+
+    assert_selector "p", text: "Your token is invalid"
 
     # correct token
     click_first_link_in_email(verify_account_email)
