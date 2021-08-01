@@ -1,5 +1,31 @@
 module Auth::Operation
   class CreateAccount < Trailblazer::Operation
+    class Form < Reform::Form
+      property :email,            virtual: true
+      property :password,         virtual: true
+      property :password_confirm, virtual: true
+
+      validates :email,             presence: true
+      validates :password,          presence: true
+      validates :password_confirm,  presence: true
+
+          def identical?(ctx, password:, password_confirm:, **)
+      password == password_confirm
+    end
+
+    def valid?(ctx, password:, **)
+      password && password.size >= 4
+    end
+
+    def not_identical(ctx, **)
+      ctx[:error] = "Passwords do not match."
+    end
+
+    def not_valid(ctx, **)
+      ctx[:error] = "Password does not meet requirements."
+    end
+    end
+
     step :check_email
     fail :email_invalid_msg, fail_fast: true
     step Subprocess(Auth::Activity::ProcessPasswords), # provides {:password_hash}

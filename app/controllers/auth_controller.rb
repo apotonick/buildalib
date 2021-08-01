@@ -33,6 +33,7 @@ class AuthController < ApplicationController
     }
   end
   endpoint Auth::Operation::VerifyAccount
+  endpoint Auth::Operation::ResetPassword
 
   def signup_form
     # ctx = {}
@@ -58,6 +59,12 @@ class AuthController < ApplicationController
       render cell(Auth::SignUp::Cell::VerifySuccess, ctx[:user])
     end.Or do |ctx|
       render cell(Auth::SignUp::Cell::VerifyFailure, ctx) # TODO: offer link for fresh token?
+    end
+  end
+
+  def forgot_password_form
+    endpoint Trailblazer::Operation do |ctx|      # FIXME/DISCUSS
+      render cell(Auth::Password::Cell::ResetForm, ctx)# OpenStruct.new(email: nil))
     end
   end
 

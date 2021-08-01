@@ -67,5 +67,14 @@ class AuthsTest < ApplicationSystemTestCase
     assert_selector "h2", text: "Success"
     assert_selector "p", text: "please sign in"
     assert_selector "p", text: "for yogi@trb.to"
+
+# [OP] Reset password
+    visit forgot_password_form_path
+
+  # invalid request
+
+  # successful request
+    assert_selector "h2", text: "Reset your password"
+    fill_in "Email", with: "yogi@trb.to"
   end
 end
