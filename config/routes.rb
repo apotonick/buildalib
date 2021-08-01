@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "/auth/signin"  => "auth#signin_form",  as: :signin_form
 
   get "/auth/forgot_password"  => "auth#forgot_password_form",  as: :forgot_password_form
-  get "/auth/reset_password"  => "auth#reset_password",  as: :reset_password
+  post "/auth/reset_password"  => "auth#reset_password",  as: :reset_password
 
   get "/auth/verify_account/:token" => "auth#verify_account", as: :verify_account
   # get "/auth/reset_password/:token" => "auth#reset_password", as: :reset_password

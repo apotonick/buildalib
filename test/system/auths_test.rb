@@ -68,13 +68,27 @@ class AuthsTest < ApplicationSystemTestCase
     assert_selector "p", text: "please sign in"
     assert_selector "p", text: "for yogi@trb.to"
 
-# [OP] Reset password
     visit forgot_password_form_path
 
-  # invalid request
-
+# [OP] Forgot password form
+  # invalid request (---)
   # successful request
     assert_selector "h2", text: "Reset your password"
+
+# [OP] Reset password
+
+  # successful
     fill_in "Email", with: "yogi@trb.to"
+    click_on "Send password reset email"
+
+    assert_selector "h2", text: "Check your inbox!"
+
+  # invalid (email doesn't exist)
+   # TODO: separate block?
+    visit forgot_password_form_path
+    fill_in "Email", with: "yogi@trrrrrrrrb.to"
+    click_on "Send password reset email"
+
+    assert_selector "h2", text: "Check your inbox!"
   end
 end

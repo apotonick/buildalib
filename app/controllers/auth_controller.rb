@@ -33,7 +33,7 @@ class AuthController < ApplicationController
     }
   end
   endpoint Auth::Operation::VerifyAccount
-  endpoint Auth::Operation::ResetPassword
+  endpoint Auth::Operation::ResetPassword#, dsl: false
 
   def signup_form
     # ctx = {}
@@ -66,6 +66,17 @@ class AuthController < ApplicationController
     endpoint Trailblazer::Operation do |ctx|      # FIXME/DISCUSS
       render cell(Auth::Password::Cell::ResetForm, ctx)# OpenStruct.new(email: nil))
     end
+  end
+
+  # Check email address, then reset password.
+  def reset_password
+    endpoint(Auth::Operation::ResetPassword, options_for_domain_ctx: {email: params[:email]}) do |ctx|
+      render cell(Auth::Password::Cell::ResetPassword, ctx)
+    end.Or do |ctx|
+      # FIXME: should it be .Or() without block when both blocks should be equal?
+      render cell(Auth::Password::Cell::ResetPassword, ctx)
+    end
+
   end
 
   def cell(cell_class, model, options={})
