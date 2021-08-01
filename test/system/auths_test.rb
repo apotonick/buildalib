@@ -64,7 +64,8 @@ class AuthsTest < ApplicationSystemTestCase
 
     # correct token
     click_first_link_in_email(verify_account_email)
-
-
+    assert_selector "h2", text: "Success"
+    assert_selector "p", text: "please sign in"
+    assert_selector "p", text: "for yogi@trb.to"
   end
 end
