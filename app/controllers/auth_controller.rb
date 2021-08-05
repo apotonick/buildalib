@@ -69,8 +69,8 @@ class AuthController < ApplicationController
   end
 
   # Check email address, then reset password.
-  def reset_password
-    endpoint(Auth::Operation::ResetPassword, options_for_domain_ctx: {email: params[:email]}) do |ctx|
+  def reset_password                                                          # FIXME
+    endpoint(Auth::Operation::ResetPassword, options_for_domain_ctx: {email: params[:password][:email]}) do |ctx|
       render cell(Auth::Password::Cell::ResetPassword, ctx)
     end.Or do |ctx|
       # FIXME: should it be .Or() without block when both blocks should be equal?

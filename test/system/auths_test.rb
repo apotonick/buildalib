@@ -83,6 +83,10 @@ class AuthsTest < ApplicationSystemTestCase
 
     assert_selector "h2", text: "Check your inbox!"
 
+    reset_password_email = open_last_email()#[1]
+    assert_must have_body_text(/auth\/reset_password\?token=\w+/), reset_password_email
+    assert_must deliver_to("yogi@trb.to"), reset_password_email
+
   # invalid (email doesn't exist)
    # TODO: separate block?
     visit forgot_password_form_path
@@ -90,5 +94,10 @@ class AuthsTest < ApplicationSystemTestCase
     click_on "Send password reset email"
 
     assert_selector "h2", text: "Check your inbox!"
+    # TODO: assert emails haven't changed (we only assert what the user sees)
+    new_reset_password_email = open_last_email # this is for "yogi@trrrrrrrrb.to"
+    assert_equal reset_password_email, new_reset_password_email # nothing got sent
+
+# [OP] Change password
   end
 end
