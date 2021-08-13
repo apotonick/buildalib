@@ -1,0 +1,28 @@
+<%= form_for :password, url: change_password_path, html: { class: "my-8 p-5 space-y-6 bg-white rounded-md text-purple" } do |f| %>
+  <div class="error">
+    <%= model[:error] %>
+  </div>
+
+  <%= f.text_field :token, type: :hidden, value: token %>
+  <h2 class="mt-3 text-center text-3xl font-extrabold">
+    Change password
+  </h2>
+
+  <div class="rounded-md shadow-sm -space-y-px">
+    <div>
+      <%= f.text_field :password, type: :password, autocomplete: "current-password", required: true, class: "appearance-none rounded-none relative block w-full px-3 py-2 my-5 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Password" %>
+    </div>
+
+    <div>
+      <%= f.text_field :password_confirm, type: "password", autocomplete: "current-password", required: true, class: "appearance-none rounded-none relative block w-full px-3 py-2 my-5 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Confirm password" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.submit "Change password", class: "group relative w-full flex justify-center my-5 py-2 px-4 border border-transparent text-sm cursor-pointer font-medium rounded-md text-white bg-purple hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+
+  <div class="text-sm text-center">
+    <span class="text-sm">Don't have an account ?</span>
+    <%= link_to "Sign up", signup_form_path, class: "font-medium hover:text-indigo-500" %>
+  </div>
+<% end %>

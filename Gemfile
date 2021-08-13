@@ -32,6 +32,7 @@ gem "trailblazer-rails", path: "../trailblazer-rails"
 gem "reform-rails"
 gem "trailblazer-endpoint", path: "../trailblazer-endpoint"
 gem "rexml"
+# gem "trailblazer-activity-dsl-linear", path: "../trailblazer-activity-dsl-linear"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

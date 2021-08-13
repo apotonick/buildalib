@@ -34,6 +34,13 @@ class AuthController < ApplicationController
   end
   endpoint Auth::Operation::VerifyAccount
   endpoint Auth::Operation::ResetPassword#, dsl: false
+  endpoint Auth::Operation::UpdatePassword::CheckToken
+  endpoint Auth::Operation::UpdatePassword do
+    {
+      Output(:fail_fast) => Track(:failure)
+    }
+  end
+  endpoint Auth::Operation::Login
 
   def signup_form
     # ctx = {}
@@ -76,8 +83,42 @@ class AuthController < ApplicationController
       # FIXME: should it be .Or() without block when both blocks should be equal?
       render cell(Auth::Password::Cell::ResetPassword, ctx)
     end
-
   end
+
+  def change_password_form
+    endpoint Auth::Operation::UpdatePassword::CheckToken, options_for_domain_ctx: params do |ctx|
+      render cell(Auth::Password::Cell::ChangeForm, Struct.new(:token, :error).new(ctx[:token], "")) # DISCUSS
+    end.Or do |ctx|
+      render cell(Auth::SignUp::Cell::VerifyFailure, ctx) # TODO: separate cell.
+    end
+  end
+
+  def change_password                                                          # FIXME
+    endpoint(Auth::Operation::UpdatePassword, options_for_domain_ctx: {token: params[:password][:token], email: params[:password][:email], password: params[:password][:password], password_confirm: params[:password][:password_confirm]}) do |ctx|
+      render cell(Auth::Password::Cell::ChangeSuccess, ctx) # DISCUSS
+    end.Or do |ctx|
+      # FIXME: should it be .Or() without block when both blocks should be equal?
+      render cell(Auth::Password::Cell::ChangeForm, Struct.new(:token, :error).new(ctx[:token], ctx[:error])) # DISCUSS
+    end
+  end
+
+  def signin_form
+    endpoint Trailblazer::Operation do |ctx|
+      render cell(Auth::SignIn::Cell::New, ctx) # TODO: rename to ::Form
+    end
+  end
+
+  def signin
+    endpoint Auth::Operation::Login, options_for_domain_ctx: {email: params[:signin][:email], password: params[:signin][:password]} do |ctx|
+      session[:current_user_id] = ctx[:user].id
+
+      redirect_to dashboard_path
+    end.Or do |ctx|
+      render cell(Auth::SignIn::Cell::New, ctx)
+    end
+  end
+
+
 
   def cell(cell_class, model, options={})
     super(cell_class, model, options.merge(layout: Layout::Cell::Authentication)) # FIXME: this interface sucks.
