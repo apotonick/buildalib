@@ -153,5 +153,16 @@ class AuthsTest < ApplicationSystemTestCase
     click_on "Sign in"
 
     # TODO: check for user id in cookie?
+# [OP] dashboard
+
+    # check for layout
+    assert_selector ".content"
+
+
+  end
+
+  test "authenticate test" do
+    visit dashboard_path
+    assert_selector "h2", text: "Not authenticated"
   end
 end
