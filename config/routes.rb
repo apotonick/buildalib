@@ -19,4 +19,5 @@ Rails.application.routes.draw do
   # get "/auth/reset_password/:token" => "auth#reset_password", as: :reset_password
 
   get "/my" => "home#dashboard", as: "dashboard"
+  get "/my/settings" => "home#settings", as: "settings"
 end

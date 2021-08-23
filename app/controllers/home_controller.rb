@@ -32,6 +32,12 @@ class HomeController < ApplicationController
     # .protocol_failure { render html: "not authenticated" }
   end
 
+  def settings
+    endpoint Trailblazer::Operation do |ctx, current_user:, **|
+      render cell(Home::Cell::Settings, current_user)
+    end
+  end
+
   def cell(cell_class, model, options={})
     super(cell_class, model, options.merge(layout: Layout::Cell::Authentication)) # FIXME: this interface sucks.
   end # FIXME

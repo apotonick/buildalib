@@ -158,7 +158,12 @@ class AuthsTest < ApplicationSystemTestCase
     # check for layout
     assert_selector ".content"
 
+    assert_selector "h2", text: "G'day, yogi@trb.to"
 
+# [OP] settings
+    click_on "Settings"
+
+    assert_selector "h2", text: "Settings for yogi@trb.to"
   end
 
   test "authenticate test" do
