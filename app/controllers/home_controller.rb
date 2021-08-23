@@ -28,7 +28,8 @@ class HomeController < ApplicationController
   def dashboard
     endpoint Trailblazer::Operation do |ctx, current_user:, **|
       render cell(Home::Cell::Dashboard, current_user)
-    end
+    end # note there's no explicit unauthenticated handling
+    # .protocol_failure { render html: "not authenticated" }
   end
 
   def cell(cell_class, model, options={})
