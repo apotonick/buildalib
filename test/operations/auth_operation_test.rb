@@ -161,7 +161,7 @@ class AuthOperationTest < Minitest::Spec
         # key is something like "aJK1mzcc6adgGvcJq8rM_bkfHk9FTtjypD8x7RZOkDo"
         assert_equal 43, reset_password_key.key.size
 
-        assert_match /\/auth\/reset_password\/#{user.id}_#{reset_password_key.key}/, result[:email].body.to_s
+        assert_match /\/auth\/change_password\?token=#{user.id}_#{reset_password_key.key}/, result[:email].body.to_s
       end
 
     end
