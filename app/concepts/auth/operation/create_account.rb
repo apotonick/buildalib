@@ -33,7 +33,8 @@ module Auth::Operation
     step :state
     step :save_account
     step Subprocess(Auth::Activity::CreateKey),
-      input:  ->(ctx, user:, **) { {key_model_class: VerifyAccountKey, user: user}.merge(ctx.key?(:secure_random) ? {secure_random: ctx[:secure_random]} : {}) },
+      input:  ->(ctx, user:, **) { {key_model_class: VerifyAccountKey, user: user} },
+      inject: [:secure_random],
       output: ->(ctx, key:, **) { {verify_account_key: key, error: ctx[:error]} }
     step :send_verify_account_email
 
